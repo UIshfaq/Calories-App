@@ -1,7 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import {CaloriesRoute} from "./modules/Routes/CaloriesRoute";
+import {CaloriesRoute} from "./modules/Routes/CaloriesRoute.js";
 
 
 const app = express();
