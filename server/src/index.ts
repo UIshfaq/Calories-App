@@ -1,13 +1,21 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import cors from 'cors';
-
-const app = express()
-
-app.use(cors()) // Enable CORS for all routes for dissmissing CORS errors during development
-app.use(express.json()) // Enabled to parse JSON request bodies
+import {CaloriesRoute} from "./modules/Routes/CaloriesRoute";
 
 
+const app = express();
+app.use(express.json());
+app.use(cors());
 
-app.listen(3000, () =>  {
-    console.log('Server is running on http://localhost:3000')
-})
+// Connexion à MongoDB (l'URL vient de ton docker-compose)
+mongoose.connect('mongodb://root:example@localhost:27017/calories_db?authSource=admin')
+    .then(() => console.log('Connecté à MongoDB !'))
+    .catch(err => console.error('Erreur Mongo:', err));
+
+app.use('/calorie', CaloriesRoute);
+
+
+
+const PORT = 3000;
+app.listen(PORT, () => console.log(`Serveur sur http://localhost:${PORT}`));
