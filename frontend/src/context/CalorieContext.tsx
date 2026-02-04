@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import { createContext, useState, useContext, type ReactNode, useEffect } from 'react';
 
 export interface CalorieEntry {
     _id?: string;
@@ -9,7 +9,7 @@ export interface CalorieEntry {
 
 interface CalorieContextType {
     entries: CalorieEntry[];
-    addEntry: (entry: Omit<CalorieEntry, '_id'>) => void;
+    addEntry: (entry: Omit<CalorieEntry, '_id'>) => void; // va prendre tout sauf l'id
     filtre: string;
     setFiltre: (val: string) => void;
 }
