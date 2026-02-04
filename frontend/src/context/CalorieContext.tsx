@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, ReactNode } from 'react';
+import { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 
 export interface CalorieEntry {
     _id?: string;
@@ -7,31 +7,69 @@ export interface CalorieEntry {
     type: 'apport' | 'depense';
 }
 
-// On définit ce que notre "magasin" (Context) partage
 interface CalorieContextType {
     entries: CalorieEntry[];
-    addEntry: (entry: CalorieEntry) => void;
-    setEntries: (entries: CalorieEntry[]) => void;
+    addEntry: (entry: Omit<CalorieEntry, '_id'>) => void;
+    filtre: string;
+    setFiltre: (val: string) => void;
 }
 
-// --- LE CONTEXT ---
 const CalorieContext = createContext<CalorieContextType | undefined>(undefined);
 
 export const CalorieProvider = ({ children }: { children: ReactNode }) => {
     const [entries, setEntries] = useState<CalorieEntry[]>([]);
+    const [filtre, setFiltre] = useState('');
 
-    const addEntry = (entry: CalorieEntry) => {
-        setEntries((prev) => [...prev, entry]);
+
+    useEffect(() => {
+        const fetchCalories = async () => {
+            try {
+                const url = filtre
+                    ? `http://localhost:3000/calorie?type=${filtre}`
+                    : `http://localhost:3000/calorie`;
+
+                const response = await fetch(url);
+                const data = await response.json();
+                setEntries(data);
+            } catch (error) {
+                console.error("Erreur chargement API:", error);
+            }
+        };
+        fetchCalories();
+    }, [filtre]);
+
+
+
+    const addEntry = async (entry: Omit<CalorieEntry, '_id'>) => {
+        try {
+            const response = await fetch('http://localhost:3000/calorie', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(entry)
+            });
+
+            if (response.ok) {
+
+
+                const url = filtre
+                    ? `http://localhost:3000/calorie?type=${filtre}`
+                    : `http://localhost:3000/calorie`;
+                const res2 = await fetch(url);
+                const data2 = await res2.json();
+                setEntries(data2);
+            }
+        } catch (error) {
+            console.error("Erreur ajout API:", error);
+        }
     };
 
     return (
-        <CalorieContext.Provider value={{ entries, addEntry, setEntries }}>
+        <CalorieContext.Provider value={{ entries, addEntry, filtre, setFiltre }}>
             {children}
         </CalorieContext.Provider>
     );
 };
 
-// Hook pour utiliser les données facilement
 export const useCalories = () => {
     const context = useContext(CalorieContext);
     if (!context) throw new Error("Erreur de Provider");

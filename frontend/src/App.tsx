@@ -1,27 +1,33 @@
-import { CalorieProvider, useCalories } from './context/CalorieContext';
-import CaloriesForm from './components/CaloriesEntriesForm';
+import { CalorieProvider } from './context/CalorieContext';
+import CaloriesBilan from './components/CaloriesBilan';
+import CaloriesForm from './components/CaloriesEntriesForm.tsx';
+import CaloriesList from './components/CaloriesList'; // Assure-toi que ce fichier existe
 import './App.css';
-
-const CaloriesList = () => {
-    const { entries } = useCalories();
-    return (
-        <ul>
-            {entries.map((entry, index) => (
-                <li key={index}>
-                    <strong>{entry.intitule}</strong> : {entry.quantite} kcal ({entry.type === 'apport' ? 'Apport' : 'Dépense'})
-                </li>
-            ))}
-        </ul>
-    );
-};
 
 function App() {
     return (
         <CalorieProvider>
             <div className="App">
-                <h1>Suivi des Calories</h1>
-                <CaloriesForm />
-                <CaloriesList />
+                <h1>Examen : Suivi Calories</h1>
+
+                <div className="container">
+                    {/* ZONE 1 : Le Bilan */}
+                    <div className="zone bilan-zone">
+                        <CaloriesBilan />
+                    </div>
+
+                    {/* ZONE 2 : Le Formulaire */}
+                    <div className="zone form-zone">
+                        <h2>Ajouter</h2>
+                        <CaloriesForm />
+                    </div>
+
+                    {/* ZONE 3 : La Liste et les Filtres */}
+                    <div className="zone list-zone">
+                        <h2>Historique</h2>
+                        <CaloriesList />
+                    </div>
+                </div>
             </div>
         </CalorieProvider>
     );
