@@ -1,9 +1,10 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState, useContext, ReactNode } from 'react';
 
 export interface CalorieEntry {
     _id?: string;
     intitule: string;
     quantite: number;
+    type: 'apport' | 'depense';
 }
 
 // On définit ce que notre "magasin" (Context) partage

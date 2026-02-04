@@ -15,7 +15,5 @@ mongoose.connect('mongodb://root:example@localhost:27017/calories_db?authSource=
 
 app.use('/calorie', CaloriesRoute);
 
-
-
 const PORT = 3000;
 app.listen(PORT, () => console.log(`Serveur sur http://localhost:${PORT}`));
