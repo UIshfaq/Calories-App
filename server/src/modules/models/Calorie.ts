@@ -8,11 +8,16 @@ const calorieSchema = new mongoose.Schema({
     },
     quantite: {
         type: Number,
-        required: true // La quantité est obligatoire
+        required: true
     },
     type: {
         type: String,
-        enum: ['apport', 'depense'], // On n'accepte que ces deux mots
+        enum: ['apport', 'depense'],
+        required: true
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
     createdAt: {
@@ -21,6 +26,5 @@ const calorieSchema = new mongoose.Schema({
     }
 });
 
-// Le Model : C'est l'outil qui permet de faire des recherches, des ajouts, etc.
-// MongoDB va automatiquement créer une collection nommée "calories" (au pluriel)
+
 export const Calorie = mongoose.model('Calorie', calorieSchema);

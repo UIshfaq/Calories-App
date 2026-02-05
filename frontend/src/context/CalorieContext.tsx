@@ -1,4 +1,5 @@
 import { createContext, useState, useContext, type ReactNode, useEffect } from 'react';
+import {useAuth} from "./AuthContexte.tsx";
 
 export interface CalorieEntry {
     _id?: string;
@@ -21,22 +22,38 @@ export const CalorieProvider = ({ children }: { children: ReactNode }) => {
     const [filtre, setFiltre] = useState('');
 
 
+    const { token } = useAuth();
+
+    const API_URL = 'http://localhost:3000/calorie';
+
     useEffect(() => {
+        if (!token) return;
+
         const fetchCalories = async () => {
             try {
                 const url = filtre
-                    ? `http://localhost:3000/calorie?type=${filtre}`
-                    : `http://localhost:3000/calorie`;
+                    ? `${API_URL}?type=${filtre}`
+                    : API_URL;
 
-                const response = await fetch(url);
-                const data = await response.json();
-                setEntries(data);
+                const response = await fetch(url, {
+                    // 3. ON AJOUTE LE TOKEN DANS LES HEADERS ICI
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setEntries(data);
+                } else {
+                    console.error("Erreur auth ou serveur");
+                }
             } catch (error) {
                 console.error("Erreur chargement API:", error);
             }
         };
         fetchCalories();
-    }, [filtre]);
+    }, [filtre, token]);
 
 
 
