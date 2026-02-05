@@ -4,6 +4,7 @@ import './App.css';
 import {AuthProvider, useAuth} from "./context/AuthContexte.tsx";
 import Login from "./Screen/Login.tsx";
 import type {JSX} from "react";
+import Register from "./Screen/Register.tsx";
 
 const PrivateRoute = ({ children }: { children: JSX.Element }) => {
     const { token } = useAuth();
@@ -17,6 +18,8 @@ function App() {
                 <Routes>
                     {/* Route Publique : La page de Login */}
                     <Route path="/login" element={<Login />} />
+
+                    <Route path="/register" element={<Register />} />
 
                     {/* Route Protégée : Le Dashboard (Ton app de Calories) */}
                     <Route

@@ -2,8 +2,11 @@ import { CalorieProvider } from '../context/CalorieContext';
 import CaloriesBilan from './CaloriesBilan';
 import CaloriesForm from './CaloriesEntriesForm'; // Vérifie bien l'extension .tsx ou .jsx
 import CaloriesList from './CaloriesList';
+import {useAuth} from "../context/AuthContexte.tsx";
 
 const Dashboard = () => {
+    const { logout } = useAuth();
+
     return (
         // Le Provider est ici : il aura accès au Token de l'utilisateur connecté
         <CalorieProvider>
@@ -27,6 +30,7 @@ const Dashboard = () => {
                         <h2>Historique</h2>
                         <CaloriesList />
                     </div>
+                    <button onClick={logout}> Se deconnecter</button>
                 </div>
             </div>
         </CalorieProvider>

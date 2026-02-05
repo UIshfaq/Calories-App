@@ -40,6 +40,9 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                 />
                 <button type="submit">Se connecter</button>
+                <button onClick={() => navigate('/register')}>
+                    Pas de compte ?
+                </button>
             </form>
         </div>
     );
