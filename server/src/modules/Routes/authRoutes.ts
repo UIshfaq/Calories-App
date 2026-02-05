@@ -1,10 +1,9 @@
-import express, {Router} from 'express';
+import express, { Router } from 'express';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 import {User} from '../models/User.js';
+import { createAuthToken } from "../auth/auth.js"; // Correction 2 : Ajout de .js obligatoire
 
-export const AuthRoute = Router()
-
+export const AuthRoute = Router();
 
 AuthRoute.post('/register', async (req, res) => {
     try {
@@ -23,7 +22,7 @@ AuthRoute.post('/register', async (req, res) => {
         await newUser.save();
         res.status(201).json({ message: "Utilisateur créé avec succès" });
 
-    } catch (err) {
+    } catch (err: any) {
         res.status(500).json({ error: err.message });
     }
 });
@@ -38,16 +37,13 @@ AuthRoute.post('/login', async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ message: "Mot de passe incorrect" });
 
-        const token = jwt.sign(
-            { id: user._id, role: user.role },
-            "TA_CLE_SECRETE",
-            { expiresIn: "24h" }
-        );
+        const token = createAuthToken({
+            userId: user._id.toString(),
+            role: user.role as "admin" | "user"
+        });
 
-        res.json({ token, user: { id: user._id, email: user.email, role: user.role } });
-
-    } catch (err) {
+        res.json({ token, user });
+    } catch (err: any) {
         res.status(500).json({ error: err.message });
     }
 });
-
