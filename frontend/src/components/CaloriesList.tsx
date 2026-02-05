@@ -1,7 +1,7 @@
 import { useCalories } from "../context/CalorieContext";
 
 const CaloriesList = () => {
-    const { entries, filtre, setFiltre } = useCalories();
+    const { entries, filtre, setFiltre, deleteEntry } = useCalories();
 
     return (
         <div style={{ border: '1px solid #ccc', padding: '10px' }}>
@@ -40,6 +40,16 @@ const CaloriesList = () => {
                             <strong>{entry.intitule}</strong>
                             <small> ({entry.type})</small>
                         </span>
+
+                        <button
+                            onClick={() => {
+                                if (entry._id) {
+                                    deleteEntry(entry._id);
+                                }
+                            }}
+                        >
+                            Supprimer 🗑
+                        </button>
 
                         <span style={{ color: entry.type === 'apport' ? 'green' : 'red', fontWeight: 'bold' }}>
                             {entry.type === 'apport' ? '+' : '-'}{entry.quantite} kcal
