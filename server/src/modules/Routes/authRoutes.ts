@@ -7,7 +7,7 @@ export const AuthRoute = Router();
 
 AuthRoute.post('/register', async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password ,role} = req.body;
 
         const existingUser = await User.findOne({ email });
         if (existingUser) return res.status(400).json({ message: "Email déjà utilisé" });
@@ -16,7 +16,7 @@ AuthRoute.post('/register', async (req, res) => {
 
         const newUser = new User({
             email,
-            password: hashedPassword
+            password: hashedPassword,
         });
 
         await newUser.save();

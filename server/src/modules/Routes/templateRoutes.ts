@@ -1,6 +1,8 @@
 import express, {Router} from 'express';
 import { Template } from '../models/Template.js';
 import { authMiddleware } from '../auth/auth.js';
+import {adminMiddleware} from "../auth/Isadmin";
+
 
 export const TemplateRoute = Router();
 
@@ -15,7 +17,7 @@ TemplateRoute.get('/', async (req, res) => {
     }
 });
 
-TemplateRoute.post('/', async (req, res) => {
+TemplateRoute.post('/', adminMiddleware ,async (req, res) => {
     try {
         const newTemplate = await Template.create(req.body);
         res.status(201).json(newTemplate);

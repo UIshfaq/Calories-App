@@ -5,7 +5,6 @@ import {CaloriesRoute} from "./modules/Routes/CaloriesRoute.js";
 import {AuthRoute} from "./modules/Routes/authRoutes";
 import {TemplateRoute} from "./modules/Routes/templateRoutes.js";
 
-
 const app = express();
 app.use(express.json());
 app.use(cors());
