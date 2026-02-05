@@ -36,6 +36,7 @@ const CaloriesForm = () => {
                 <option value="depense">Dépense</option>
             </select>
             <button type="submit">Ajouter</button>
+
         </form>
     );
 }
