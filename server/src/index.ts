@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import {CaloriesRoute} from "./modules/Routes/CaloriesRoute.js";
+import {AuthRoute} from "./modules/Routes/authRoutes";
 
 
 const app = express();
@@ -14,6 +15,7 @@ mongoose.connect('mongodb://root:example@localhost:27017/calories_db?authSource=
     .catch(err => console.error('Erreur Mongo:', err));
 
 app.use('/calorie', CaloriesRoute);
+app.use('/auth', AuthRoute);
 
 const PORT = 3000;
 app.listen(PORT, () => console.log(`Serveur sur http://localhost:${PORT}`));

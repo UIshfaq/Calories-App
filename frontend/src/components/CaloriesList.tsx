@@ -34,7 +34,7 @@ const CaloriesList = () => {
 
             {/* Affichage de la liste */}
             <ul>
-                {entries.map((entry) => (
+                {entries.map((entry) => ( //.map pour parcourir le tableau entries et afficher chaque element dans une liste
                     <li key={entry._id} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #eee', padding: '5px' }}>
                         <span>
                             <strong>{entry.intitule}</strong>
