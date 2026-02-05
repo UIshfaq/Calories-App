@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     const [token, setToken] = useState<string | undefined>(localStorage.getItem('token') || undefined);
 
     const login = async (email: string, password: string) => {
-        const response = await fetch('http://localhost:3000/api/auth/login', {
+        const response = await fetch('http://localhost:3000/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

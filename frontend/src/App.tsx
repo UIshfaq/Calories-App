@@ -1,34 +1,35 @@
-import { CalorieProvider } from './context/CalorieContext';
-import CaloriesBilan from './components/CaloriesBilan';
-import CaloriesForm from './components/CaloriesEntriesForm.tsx';
-import CaloriesList from './components/CaloriesList'; // Assure-toi que ce fichier existe
-
-
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import Dashboard from './components/Dashboard';
 import './App.css';
+import {AuthProvider, useAuth} from "./context/AuthContexte.tsx";
+import Login from "./Screen/Login.tsx";
+import type {JSX} from "react";
+
+const PrivateRoute = ({ children }: { children: JSX.Element }) => {
+    const { token } = useAuth();
+    return token ? children : <Navigate to="/login" />;
+};
 
 function App() {
     return (
-        <CalorieProvider>
-            <div className="App">
-                <h1>Examen : Suivi Calories</h1>
+        <AuthProvider>
+            <BrowserRouter>
+                <Routes>
+                    {/* Route Publique : La page de Login */}
+                    <Route path="/login" element={<Login />} />
 
-                <div className="container">
-                    <div className="zone bilan-zone">
-                        <CaloriesBilan />
-                    </div>
-
-                    <div className="zone form-zone">
-                        <h2>Ajouter</h2>
-                        <CaloriesForm />
-                    </div>
-
-                    <div className="zone list-zone">
-                        <h2>Historique</h2>
-                        <CaloriesList />
-                    </div>
-                </div>
-            </div>
-        </CalorieProvider>
+                    {/* Route Protégée : Le Dashboard (Ton app de Calories) */}
+                    <Route
+                        path="/"
+                        element={
+                            <PrivateRoute>
+                                <Dashboard />
+                            </PrivateRoute>
+                        }
+                    />
+                </Routes>
+            </BrowserRouter>
+        </AuthProvider>
     );
 }
 
