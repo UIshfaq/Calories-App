@@ -11,6 +11,7 @@ export interface CalorieEntry {
 interface CalorieContextType {
     entries: CalorieEntry[];
     addEntry: (entry: Omit<CalorieEntry, '_id'>) => void; // va prendre tout sauf l'id
+    deleteEntry: (id: string) => void;
     filtre: string;
     setFiltre: (val: string) => void;
 }
@@ -58,30 +59,48 @@ export const CalorieProvider = ({ children }: { children: ReactNode }) => {
 
 
     const addEntry = async (entry: Omit<CalorieEntry, '_id'>) => {
+        if (!token) return;
+
         try {
-            const response = await fetch('http://localhost:3000/calorie', {
+            const response = await fetch(API_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    // 4. Token obligatoire ici aussi
+                    'Authorization': `Bearer ${token}`
+                },
                 body: JSON.stringify(entry)
             });
 
             if (response.ok) {
-
-
-                const url = filtre
-                    ? `http://localhost:3000/calorie?type=${filtre}`
-                    : `http://localhost:3000/calorie`;
-                const res2 = await fetch(url);
+                // Rechargement de la liste après ajout
+                const url = filtre ? `${API_URL}?type=${filtre}` : API_URL;
+                const res2 = await fetch(url, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
                 const data2 = await res2.json();
                 setEntries(data2);
             }
         } catch (error) {
-            console.error("Erreur ajout API:", error);
+            console.error("Erreur API:", error);
         }
     };
 
+    const deleteEntry = async (id: string) => {
+        if (!token) return;
+        try {
+            await fetch(`${API_URL}/${id}`, {
+                method: 'DELETE',
+                // 5. Et ici pour la suppression
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            setEntries(current => current.filter(e => e._id !== id));
+        } catch (error) {
+            console.error("Erreur suppression:", error);
+        }
+    };
     return (
-        <CalorieContext.Provider value={{ entries, addEntry, filtre, setFiltre }}>
+        <CalorieContext.Provider value={{ entries, addEntry, deleteEntry,filtre, setFiltre }}>
             {children}
         </CalorieContext.Provider>
     );
