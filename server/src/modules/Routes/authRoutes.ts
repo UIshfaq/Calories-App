@@ -17,6 +17,7 @@ AuthRoute.post('/register', async (req, res) => {
         const newUser = new User({
             email,
             password: hashedPassword,
+            role: role || 'user',
         });
 
         await newUser.save();
@@ -42,7 +43,11 @@ AuthRoute.post('/login', async (req, res) => {
             role: user.role as "admin" | "user"
         });
 
-        res.json({ token, user });
+        res.json({
+            token,
+            userId: user._id,
+            role: user.role
+        });
     } catch (err: any) {
         res.status(500).json({ error: err.message });
     }

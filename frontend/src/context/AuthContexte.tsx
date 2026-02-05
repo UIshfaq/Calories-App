@@ -1,57 +1,42 @@
-import { createContext, PropsWithChildren, useContext, useState } from "react";
+import { createContext, useState, useContext, type ReactNode, useEffect } from 'react';
 
-export type AuthContextType = {
-    token?: string;
-    login: (email: string, password: string) => Promise<void>;
+interface AuthContextType {
+    token: string | undefined;
+    role: string | undefined; // Nouveau !
+    login: (token: string, role: string) => void; // On demande aussi le rôle
     logout: () => void;
-};
+}
 
-export const AuthContext = createContext<AuthContextType>({
-    login: async () => {},
-    logout: () => {},
-});
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: PropsWithChildren) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+    // On charge le token ET le role depuis le stockage
     const [token, setToken] = useState<string | undefined>(localStorage.getItem('token') || undefined);
+    const [role, setRole] = useState<string | undefined>(localStorage.getItem('role') || undefined);
 
-    const login = async (email: string, password: string) => {
-        const response = await fetch('http://localhost:3000/auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email: email, password }),
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || "Erreur de connexion");
-        }
-
-        const json = await response.json();
-
-        localStorage.setItem('token', json.token);
-        setToken(json.token);
+    const login = (newToken: string, newRole: string) => {
+        localStorage.setItem('token', newToken);
+        localStorage.setItem('role', newRole); // On sauvegarde le rôle
+        setToken(newToken);
+        setRole(newRole);
     };
 
     const logout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('role');
         setToken(undefined);
+        setRole(undefined);
     };
 
     return (
-        <AuthContext.Provider
-            value={{
-                token,
-                logout,
-                login,
-            }}
-        >
+        <AuthContext.Provider value={{ token, role, login, logout }}>
             {children}
         </AuthContext.Provider>
     );
 };
 
 export const useAuth = () => {
-    return useContext(AuthContext);
+    const context = useContext(AuthContext);
+    if (!context) throw new Error("useAuth doit être utilisé dans AuthProvider");
+    return context;
 };

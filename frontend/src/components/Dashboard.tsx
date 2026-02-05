@@ -3,10 +3,11 @@ import CaloriesBilan from './CaloriesBilan';
 import CaloriesForm from './CaloriesEntriesForm'; // Vérifie bien l'extension .tsx ou .jsx
 import CaloriesList from './CaloriesList';
 import {useAuth} from "../context/AuthContexte.tsx";
+import { useNavigate } from "react-router-dom"; // N'oublie pas cet import
 
 const Dashboard = () => {
-    const { logout } = useAuth();
-
+    const { logout ,role} = useAuth();
+    const navigate = useNavigate(); // Hook pour naviguer
     return (
         // Le Provider est ici : il aura accès au Token de l'utilisateur connecté
         <CalorieProvider>
@@ -15,7 +16,13 @@ const Dashboard = () => {
                     <h1>Examen : Suivi Calories</h1>
                     {/* On pourra ajouter un bouton Déconnexion ici plus tard */}
                 </header>
-
+                {role === 'admin' && (
+                    <button
+                        onClick={() => navigate('/')}
+                    >
+                        ⚙️ Gérer les Templates
+                    </button>
+                )}
                 <div className="container">
                     <div className="zone bilan-zone">
                         <CaloriesBilan />
