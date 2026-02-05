@@ -39,3 +39,23 @@ CaloriesRoute.post('/', async (req: any, res) => {
         res.status(400).json({ message: "Erreur lors de l'ajout", error });
     }
 });
+
+CaloriesRoute.delete('/:id', async (req: any, res) => {
+    try {
+        const userId = req.auth.userId;
+        const calorieId = req.params.id;
+
+        const deletedEntry = await Calorie.findOneAndDelete({
+            _id: calorieId,
+            user: userId
+        });
+
+        if (!deletedEntry) {
+            return res.status(404).json({ message: "Introuvable ou non autorisé" });
+        }
+
+        res.json({ message: "Supprimé avec succès" });
+    } catch (error) {
+        res.status(500).json({ message: "Erreur serveur" });
+    }
+});

@@ -66,7 +66,6 @@ export const CalorieProvider = ({ children }: { children: ReactNode }) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    // 4. Token obligatoire ici aussi
                     'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(entry)
@@ -91,7 +90,6 @@ export const CalorieProvider = ({ children }: { children: ReactNode }) => {
         try {
             await fetch(`${API_URL}/${id}`, {
                 method: 'DELETE',
-                // 5. Et ici pour la suppression
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setEntries(current => current.filter(e => e._id !== id));
