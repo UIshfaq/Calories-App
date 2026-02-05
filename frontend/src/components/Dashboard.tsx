@@ -8,17 +8,17 @@ import { useNavigate } from "react-router-dom"; // N'oublie pas cet import
 const Dashboard = () => {
     const { logout ,role} = useAuth();
     const navigate = useNavigate(); // Hook pour naviguer
+
+
     return (
-        // Le Provider est ici : il aura accès au Token de l'utilisateur connecté
         <CalorieProvider>
             <div className="App">
                 <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem' }}>
                     <h1>Examen : Suivi Calories</h1>
-                    {/* On pourra ajouter un bouton Déconnexion ici plus tard */}
                 </header>
                 {role === 'admin' && (
                     <button
-                        onClick={() => navigate('/')}
+                        onClick={() => navigate('/admin')}
                     >
                         ⚙️ Gérer les Templates
                     </button>

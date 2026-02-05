@@ -63,13 +63,7 @@ const AdminPage = () => {
             <h1>⚙️ Administration</h1>
             <p>Ajoutez ici les modèles d'aliments pour les utilisateurs.</p>
 
-            <div style={{
-                border: '2px solid orange',
-                padding: '20px',
-                background: '#fffbe6',
-                borderRadius: '8px',
-                marginTop: '20px'
-            }}>
+            <div>
                 <h3 style={{ color: '#d35400', marginTop: 0 }}>Ajouter un nouveau modèle</h3>
 
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
